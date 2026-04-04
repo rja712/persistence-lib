@@ -68,6 +68,9 @@ public class EmailContent {
     @Column(name = "processed_content_path", length = 1024)
     private String processedContentPath;
 
+    @Column(name = "cleaned_content_path", length = 1024)
+    private String cleanedContentPath;
+
     @Column(name = "sent_at")
     private Instant sentAt;
 
