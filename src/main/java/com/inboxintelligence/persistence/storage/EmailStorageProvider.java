@@ -4,8 +4,8 @@ public interface EmailStorageProvider {
 
     String readContent(String storagePath);
 
-    String writeContent(String directoryPath, String fileName, String content);
+    String writeContent(Long mailboxId, String messageId, String fileName, String content);
 
-    String writeBytes(String directoryPath, String fileName, byte[] data);
+    String writeBytes(Long mailboxId, String messageId, String fileName, byte[] data);
 
 }

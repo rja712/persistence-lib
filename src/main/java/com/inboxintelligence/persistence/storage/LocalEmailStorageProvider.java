@@ -1,5 +1,7 @@
 package com.inboxintelligence.persistence.storage;
 
+import com.inboxintelligence.persistence.config.EmailStorageProperties;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +12,16 @@ import java.nio.file.Path;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class LocalEmailStorageProvider implements EmailStorageProvider {
+
+    private final EmailStorageProperties emailStorageProperties;
+
+    private Path buildStoragePath(Long mailboxId, String messageId) {
+        return Path.of(emailStorageProperties.localBasePath()).toAbsolutePath()
+                .resolve(String.valueOf(mailboxId))
+                .resolve(messageId);
+    }
 
     @Override
     public String readContent(String storagePath) {
@@ -35,14 +46,14 @@ public class LocalEmailStorageProvider implements EmailStorageProvider {
     }
 
     @Override
-    public String writeContent(String directoryPath, String fileName, String content) {
+    public String writeContent(Long mailboxId, String messageId, String fileName, String content) {
 
         if (content == null) {
             return null;
         }
 
+        Path dir = buildStoragePath(mailboxId, messageId);
         try {
-            Path dir = Path.of(directoryPath);
             Files.createDirectories(dir);
 
             Path filePath = dir.resolve(fileName);
@@ -52,16 +63,16 @@ public class LocalEmailStorageProvider implements EmailStorageProvider {
             return filePath.toAbsolutePath().toString();
 
         } catch (IOException e) {
-            log.error("Failed to write content to {}/{}", directoryPath, fileName, e);
+            log.error("Failed to write content to {}/{}", dir, fileName, e);
             throw new RuntimeException("Failed to write content", e);
         }
     }
 
     @Override
-    public String writeBytes(String directoryPath, String fileName, byte[] data) {
+    public String writeBytes(Long mailboxId, String messageId, String fileName, byte[] data) {
 
+        Path dir = buildStoragePath(mailboxId, messageId);
         try {
-            Path dir = Path.of(directoryPath);
             Files.createDirectories(dir);
 
             String safeFileName = Path.of(fileName).getFileName().toString();
@@ -90,7 +101,7 @@ public class LocalEmailStorageProvider implements EmailStorageProvider {
             return filePath.toAbsolutePath().toString();
 
         } catch (IOException e) {
-            log.error("Failed to write bytes to {}/{}", directoryPath, fileName, e);
+            log.error("Failed to write bytes to {}/{}", dir, fileName, e);
             throw new RuntimeException("Failed to write bytes", e);
         }
     }
