@@ -1,5 +1,6 @@
 package com.inboxintelligence.persistence.service;
 
+import com.inboxintelligence.persistence.model.ProcessedStatus;
 import com.inboxintelligence.persistence.model.entity.EmailContent;
 import com.inboxintelligence.persistence.repository.EmailContentRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,11 @@ public class EmailContentService {
     }
 
     public EmailContent save(EmailContent emailContent) {
+        return repository.save(emailContent);
+    }
+
+    public EmailContent updateProcessedStatus(EmailContent emailContent, ProcessedStatus status) {
+        emailContent.setProcessedStatus(status);
         return repository.save(emailContent);
     }
 }
