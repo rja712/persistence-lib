@@ -69,10 +69,12 @@ public class LocalEmailStorageProvider implements EmailStorageProvider {
     }
 
     @Override
-    public String writeBytes(Long mailboxId, String messageId, String fileName, byte[] data) {
+    public String writeBytes(Long mailboxId, String messageId, String folder, String fileName, byte[] data) {
 
-        Path dir = buildStoragePath(mailboxId, messageId);
+        Path dir = buildStoragePath(mailboxId, messageId).resolve(folder);
+
         try {
+
             Files.createDirectories(dir);
 
             String safeFileName = Path.of(fileName).getFileName().toString();

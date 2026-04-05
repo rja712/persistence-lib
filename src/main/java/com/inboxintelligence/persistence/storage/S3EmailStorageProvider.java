@@ -20,7 +20,7 @@ public class S3EmailStorageProvider implements EmailStorageProvider {
     }
 
     @Override
-    public String writeBytes(Long mailboxId, String messageId, String fileName, byte[] data) {
-        throw new UnsupportedOperationException("S3EmailStorageProvider is not implemented");
+    public String writeBytes(Long mailboxId, String messageId, String folder, String fileName, byte[] data) {
+         throw new UnsupportedOperationException("S3EmailStorageProvider is not implemented");
     }
 }
