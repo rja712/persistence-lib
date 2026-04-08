@@ -3,6 +3,9 @@ package com.inboxintelligence.persistence.model.entity;
 import com.inboxintelligence.persistence.model.ProcessedStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.Array;
+import org.hibernate.type.SqlTypes;
 
 import java.time.Instant;
 
@@ -76,6 +79,14 @@ public class EmailContent {
 
     @Column(name = "received_at")
     private Instant receivedAt;
+
+    @JdbcTypeCode(SqlTypes.VECTOR)
+    @Array(length = 768)
+    @Column(name = "embedding")
+    private float[] embedding;
+
+    @Column(name = "embedding_model", length = 64)
+    private String embeddingModel;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "processed_status", nullable = false, length = 32)

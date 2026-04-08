@@ -22,10 +22,10 @@ public class GmailMailbox {
     @Column(name = "email_address", nullable = false, unique = true)
     private String emailAddress;
 
-    @Column(name = "access_token")
+    @Column(name = "access_token", columnDefinition = "TEXT")
     private String accessToken;
 
-    @Column(name = "refresh_token", nullable = false)
+    @Column(name = "refresh_token", nullable = false, columnDefinition = "TEXT")
     private String refreshToken;
 
     @Column(name = "access_token_expires_at")
@@ -44,7 +44,7 @@ public class GmailMailbox {
     @Column(name = "last_synced_at")
     private Instant lastSyncedAt;
 
-    @Column(name = "last_sync_error")
+    @Column(name = "last_sync_error", columnDefinition = "TEXT")
     private String lastSyncError;
 
     @Column(name = "created_at", nullable = false, updatable = false)
