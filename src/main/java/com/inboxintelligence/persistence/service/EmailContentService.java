@@ -30,4 +30,9 @@ public class EmailContentService {
         emailContent.setProcessedStatus(status);
         return repository.save(emailContent);
     }
+
+    public EmailContent updateProcessingNote(EmailContent emailContent, String note) {
+        emailContent.setProcessingNote(note);
+        return repository.save(emailContent);
+    }
 }

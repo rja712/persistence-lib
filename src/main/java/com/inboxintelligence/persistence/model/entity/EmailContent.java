@@ -90,6 +90,9 @@ public class EmailContent {
     @Builder.Default
     private ProcessedStatus processedStatus = ProcessedStatus.RECEIVED;
 
+    @Column(name = "processing_note", length = 512)
+    private String processingNote;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     @Builder.Default
     private Instant createdAt = Instant.now();
