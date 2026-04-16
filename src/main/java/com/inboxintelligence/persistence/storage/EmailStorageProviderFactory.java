@@ -19,7 +19,7 @@ public class EmailStorageProviderFactory {
     public EmailStorageProviderFactory(EmailStorageProperties emailStorageProperties,
                                        Map<String, EmailStorageProvider> emailStorageProviderBeanMap) {
 
-        String configuredProvider = emailStorageProperties.provider();
+        String configuredProvider = emailStorageProperties.name();
         String beanName = DEFAULT_PROVIDER_BEAN;
 
         if (StringUtils.hasText(configuredProvider)) {
