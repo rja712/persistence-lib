@@ -3,8 +3,8 @@ package com.inboxintelligence.persistence.model.entity;
 import com.inboxintelligence.persistence.model.ProcessedStatus;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Array;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.time.Instant;
