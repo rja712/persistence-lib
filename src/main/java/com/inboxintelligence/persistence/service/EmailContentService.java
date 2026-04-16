@@ -31,12 +31,8 @@ public class EmailContentService {
         return repository.save(emailContent);
     }
 
-    public EmailContent updateProcessedStatus(EmailContent emailContent, ProcessedStatus status) {
+    public EmailContent updateStatusAndNote(EmailContent emailContent, ProcessedStatus status, String note) {
         emailContent.setProcessedStatus(status);
-        return repository.save(emailContent);
-    }
-
-    public EmailContent updateProcessingNote(EmailContent emailContent, String note) {
         emailContent.setProcessingNote(note);
         return repository.save(emailContent);
     }
