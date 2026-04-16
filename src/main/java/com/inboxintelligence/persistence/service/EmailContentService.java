@@ -6,6 +6,7 @@ import com.inboxintelligence.persistence.repository.EmailContentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,6 +17,10 @@ public class EmailContentService {
 
     public boolean existsByGmailMailboxIdAndMessageId(Long id, String messageId) {
         return repository.existsByGmailMailboxIdAndMessageId(id, messageId);
+    }
+
+    public List<EmailContent> findAll() {
+        return repository.findAll();
     }
 
     public Optional<EmailContent> findById(Long id) {
