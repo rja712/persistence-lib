@@ -77,7 +77,7 @@ public class EmailContent {
     @Enumerated(EnumType.STRING)
     @Column(name = "processed_status", nullable = false, length = 32)
     @Builder.Default
-    private ProcessedStatus processedStatus = ProcessedStatus.RECEIVED;
+    private ProcessedStatus processedStatus = ProcessedStatus.EMAIL_RECEIVED;
 
     @Column(name = "processing_note", length = 512)
     private String processingNote;
