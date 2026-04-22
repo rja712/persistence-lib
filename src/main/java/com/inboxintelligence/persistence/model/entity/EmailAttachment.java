@@ -9,7 +9,7 @@ import java.time.Instant;
 @Table(
         name = "email_attachment",
         indexes = {
-                @Index(name = "idx_inbox_attachment", columnList = "fk_email_content_id")
+                @Index(name = "idx_email_attachment_email_content", columnList = "fk_email_content_id")
         }
 )
 @Getter
@@ -27,7 +27,7 @@ public class EmailAttachment {
     @JoinColumn(
             name = "fk_email_content_id",
             nullable = false,
-            foreignKey = @ForeignKey(name = "fk_gmail_email_attachment_inbox")
+            foreignKey = @ForeignKey(name = "fk_email_attachment_email_content")
     )
     private EmailContent emailContent;
 

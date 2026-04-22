@@ -3,9 +3,6 @@ package com.inboxintelligence.persistence.model.entity;
 import com.inboxintelligence.persistence.model.ProcessedStatus;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Array;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 
 import java.time.Instant;
 
@@ -14,14 +11,14 @@ import java.time.Instant;
         name = "email_content",
         uniqueConstraints = {
                 @UniqueConstraint(
-                        name = "uq_inbox_message",
+                        name = "uq_email_content_message",
                         columnNames = {"fk_gmail_mailbox_id", "message_id"}
                 )
         },
         indexes = {
-                @Index(name = "idx_inbox_mailbox", columnList = "fk_gmail_mailbox_id"),
-                @Index(name = "idx_inbox_thread", columnList = "thread_id"),
-                @Index(name = "idx_inbox_parent", columnList = "parent_message_id")
+                @Index(name = "idx_email_content_mailbox", columnList = "fk_gmail_mailbox_id"),
+                @Index(name = "idx_email_content_thread", columnList = "thread_id"),
+                @Index(name = "idx_email_content_parent", columnList = "parent_message_id")
         }
 )
 @Getter
@@ -76,14 +73,6 @@ public class EmailContent {
 
     @Column(name = "received_at")
     private Instant receivedAt;
-
-    @JdbcTypeCode(SqlTypes.VECTOR)
-    @Array(length = 768)
-    @Column(name = "embedding")
-    private float[] embedding;
-
-    @Column(name = "embedding_model", length = 64)
-    private String embeddingModel;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "processed_status", nullable = false, length = 32)
