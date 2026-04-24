@@ -9,6 +9,8 @@ build/
 *.ipr
 *.iws
 
+bin/
+
 # OS
 .DS_Store
 
