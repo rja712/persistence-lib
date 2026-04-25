@@ -5,6 +5,7 @@ import com.inboxintelligence.persistence.repository.EmailEnrichmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,4 +21,9 @@ public class EmailEnrichmentService {
     public Optional<EmailEnrichment> findByEmailContentId(Long emailContentId) {
         return repository.findByEmailContentId(emailContentId);
     }
+
+    public List<EmailEnrichment> findByGmailMailboxId(Long emailContentId) {
+        return repository.findByGmailMailboxId(emailContentId);
+    }
+
 }
