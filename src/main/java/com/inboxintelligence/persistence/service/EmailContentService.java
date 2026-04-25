@@ -5,9 +5,7 @@ import com.inboxintelligence.persistence.model.entity.EmailContent;
 import com.inboxintelligence.persistence.repository.EmailContentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,8 +15,8 @@ public class EmailContentService {
 
     private final EmailContentRepository repository;
 
-    public boolean existsByGmailMailboxIdAndMessageId(Long id, String messageId) {
-        return repository.existsByGmailMailboxIdAndMessageId(id, messageId);
+    public boolean existsByGmailMailboxIdAndMessageId(Long gmailMailboxId, String messageId) {
+        return repository.existsByGmailMailboxIdAndMessageId(gmailMailboxId, messageId);
     }
 
     public List<EmailContent> findAll() {
@@ -39,21 +37,4 @@ public class EmailContentService {
         return repository.save(emailContent);
     }
 
-    @Transactional
-    public void updateStatus(List<Long> ids, ProcessedStatus status, String note) {
-         repository.updateStatus(ids, status, note, Instant.now());
-    }
-
-    public List<EmailContent> findRepresentativeEmailsByCluster(Long clusterId, float[] centroid) {
-
-        StringBuilder sb = new StringBuilder("[");
-        for (int i = 0; i < v.length; i++) {
-            if (i > 0) sb.append(",");
-            sb.append(v[i]);
-        }
-        String centroidString = sb.append("]").toString();
-
-
-        return repository.findRepresentativeEmailsByClusterId(clusterId, centroidString);
-    }
 }

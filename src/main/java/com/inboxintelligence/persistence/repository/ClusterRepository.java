@@ -8,4 +8,6 @@ import java.util.List;
 public interface ClusterRepository extends JpaRepository<Cluster, Long> {
 
     List<Cluster> findByGmailMailboxId(Long mailboxId);
+
+    void deleteByGmailMailboxId(Long mailboxId);
 }

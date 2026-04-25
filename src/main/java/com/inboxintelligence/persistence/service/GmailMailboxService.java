@@ -16,8 +16,8 @@ public class GmailMailboxService {
 
     private final GmailMailboxRepository repository;
 
-    public void save(GmailMailbox gmailMailbox) {
-        repository.save(gmailMailbox);
+    public GmailMailbox save(GmailMailbox gmailMailbox) {
+        return repository.save(gmailMailbox);
     }
 
     public Optional<GmailMailbox> findByEmailAddress(String email) {

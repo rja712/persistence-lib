@@ -25,4 +25,8 @@ public class ClusterService {
     public List<Cluster> findByMailboxId(Long mailboxId) {
         return repository.findByGmailMailboxId(mailboxId);
     }
+
+    public void deleteByMailboxId(Long mailboxId) {
+        repository.deleteByGmailMailboxId(mailboxId);
+    }
 }
