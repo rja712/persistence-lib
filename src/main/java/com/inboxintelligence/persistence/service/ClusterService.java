@@ -18,6 +18,10 @@ public class ClusterService {
         return repository.save(cluster);
     }
 
+    public List<Cluster> saveAll(List<Cluster> clusters) {
+        return repository.saveAll(clusters);
+    }
+
     public Optional<Cluster> findById(Long id) {
         return repository.findById(id);
     }
