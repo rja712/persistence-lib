@@ -29,12 +29,10 @@ public class EmailStorageProviderFactory {
         EmailStorageProvider provider = emailStorageProviderBeanMap.get(beanName);
 
         if (provider == null) {
-            log.warn("Email storage provider '{}' not found. Falling back to LOCAL provider.", beanName);
-            provider = emailStorageProviderBeanMap.get(DEFAULT_PROVIDER_BEAN);
+            throw new IllegalStateException("Email storage provider bean not found: '" + beanName);
         }
 
         this.activeEmailStorageProvider = provider;
-
         log.info("Active EmailStorageProvider: {}", provider.getClass().getSimpleName());
     }
 

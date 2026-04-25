@@ -1,13 +1,6 @@
 package com.inboxintelligence.persistence.storage;
 
-import org.springframework.stereotype.Component;
-
-@Component
 public class S3EmailStorageProvider implements EmailStorageProvider {
-
-    private String buildStoragePath(Long mailboxId, String messageId) {
-        throw new UnsupportedOperationException("S3EmailStorageProvider is not implemented");
-    }
 
     @Override
     public String readContent(String storagePath) {

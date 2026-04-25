@@ -23,13 +23,8 @@ public class EmailAttachment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(
-            name = "fk_email_content_id",
-            nullable = false,
-            foreignKey = @ForeignKey(name = "fk_email_attachment_email_content")
-    )
-    private EmailContent emailContent;
+    @Column(name = "fk_email_content_id", nullable = false)
+    private Long emailContentId;
 
     @Column(name = "email_attachment_id", length = 1024)
     private String emailAttachmentId;

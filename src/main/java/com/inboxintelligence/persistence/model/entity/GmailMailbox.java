@@ -2,15 +2,15 @@ package com.inboxintelligence.persistence.model.entity;
 
 import com.inboxintelligence.persistence.model.SyncStatus;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.Instant;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "gmail_mailbox")
 public class GmailMailbox {
@@ -39,6 +39,7 @@ public class GmailMailbox {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "sync_status", nullable = false)
+    @Builder.Default
     private SyncStatus syncStatus = SyncStatus.ACTIVE;
 
     @Column(name = "last_synced_at")
@@ -48,9 +49,11 @@ public class GmailMailbox {
     private String lastSyncError;
 
     @Column(name = "created_at", nullable = false, updatable = false)
+    @Builder.Default
     private Instant createdAt = Instant.now();
 
     @Column(name = "updated_at", nullable = false)
+    @Builder.Default
     private Instant updatedAt = Instant.now();
 
     @PreUpdate

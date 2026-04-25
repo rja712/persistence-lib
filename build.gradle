@@ -32,8 +32,6 @@ repositories {
 
 dependencies {
     api 'org.springframework.boot:spring-boot-starter-data-jpa'
-    api 'org.springframework.boot:spring-boot-starter-amqp'
-
     api 'org.hibernate.orm:hibernate-vector:6.6.41.Final'
 
     compileOnly 'org.projectlombok:lombok'
