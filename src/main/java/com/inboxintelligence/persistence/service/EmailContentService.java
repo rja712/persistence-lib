@@ -43,4 +43,17 @@ public class EmailContentService {
     public void updateStatus(List<Long> ids, ProcessedStatus status, String note) {
          repository.updateStatus(ids, status, note, Instant.now());
     }
+
+    public List<EmailContent> findRepresentativeEmailsByCluster(Long clusterId, float[] centroid) {
+
+        StringBuilder sb = new StringBuilder("[");
+        for (int i = 0; i < v.length; i++) {
+            if (i > 0) sb.append(",");
+            sb.append(v[i]);
+        }
+        String centroidString = sb.append("]").toString();
+
+
+        return repository.findRepresentativeEmailsByClusterId(clusterId, centroidString);
+    }
 }

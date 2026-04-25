@@ -26,4 +26,16 @@ public interface EmailContentRepository extends JpaRepository<EmailContent, Long
                       @Param("status") ProcessedStatus status,
                       @Param("note") String note,
                       @Param("now") Instant now);
+
+    @Query(nativeQuery = true, value = """
+            SELECT ec.*
+            FROM email_enrichments ee
+            JOIN email_content ec ON ee.fk_email_content_id = ec.id
+            WHERE ee.fk_cluster_id = :clusterId
+            ORDER BY ee.embedding <=> CAST(:centroid AS vector) ASC
+            LIMIT 3
+            """)
+    List<EmailContent> findRepresentativeEmailsByClusterId(
+            @Param("clusterId") Long clusterId,
+            @Param("centroid") String centroid);
 }
