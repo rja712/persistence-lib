@@ -22,8 +22,12 @@ public class EmailEnrichmentService {
         return repository.findByEmailContentId(emailContentId);
     }
 
-    public List<EmailEnrichment> findByGmailMailboxId(Long emailContentId) {
-        return repository.findByGmailMailboxId(emailContentId);
+    public List<EmailEnrichment> findByGmailMailboxId(Long mailboxId) {
+        return repository.findByGmailMailboxId(mailboxId);
+    }
+
+    public List<EmailEnrichment> saveAll(List<EmailEnrichment> enrichments) {
+        return repository.saveAll(enrichments);
     }
 
 }
