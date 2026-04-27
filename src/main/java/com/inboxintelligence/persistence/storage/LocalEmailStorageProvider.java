@@ -17,31 +17,25 @@ public class LocalEmailStorageProvider implements EmailStorageProvider {
 
     private final EmailStorageProperties emailStorageProperties;
 
-    private Path buildStoragePath(Long mailboxId, String messageId) {
-        return Path.of(emailStorageProperties.localBasePath()).toAbsolutePath()
-                .resolve(String.valueOf(mailboxId))
-                .resolve(messageId);
-    }
-
     @Override
-    public String readContent(String storagePath) {
+    public String readContent(String relativePath) {
 
-        if (storagePath == null || storagePath.isBlank()) {
+        if (relativePath == null || relativePath.isBlank()) {
             return "";
         }
 
-        Path path = Path.of(storagePath);
+        Path absolutePath = resolveAbsolute(relativePath);
 
-        if (!Files.exists(path)) {
-            log.warn("Storage file not found: {}", storagePath);
+        if (!Files.exists(absolutePath)) {
+            log.warn("Storage file not found: {} (resolved to {})", relativePath, absolutePath);
             return "";
         }
 
         try {
-            return Files.readString(path);
+            return Files.readString(absolutePath);
         } catch (IOException e) {
-            log.error("Failed to read storage file: {}", storagePath, e);
-            throw new RuntimeException("Failed to read storage file: " + storagePath, e);
+            log.error("Failed to read storage file: {}", absolutePath, e);
+            throw new RuntimeException("Failed to read storage file: " + relativePath, e);
         }
     }
 
@@ -52,18 +46,16 @@ public class LocalEmailStorageProvider implements EmailStorageProvider {
             return null;
         }
 
-        Path dir = buildStoragePath(mailboxId, messageId);
+        Path relativeFilePath = buildRelativePath(mailboxId, messageId).resolve(fileName);
+        Path absoluteFilePath = resolveAbsolute(relativeFilePath);
+
         try {
-            Files.createDirectories(dir);
-
-            Path filePath = dir.resolve(fileName);
-            Files.writeString(filePath, content, StandardCharsets.UTF_8);
-
-            log.debug("Content stored locally: {}", filePath);
-            return filePath.toAbsolutePath().toString();
-
+            Files.createDirectories(absoluteFilePath.getParent());
+            Files.writeString(absoluteFilePath, content, StandardCharsets.UTF_8);
+            log.debug("Content stored locally: {}", absoluteFilePath);
+            return relativeFilePath.toString();
         } catch (IOException e) {
-            log.error("Failed to write content to {}/{}", dir, fileName, e);
+            log.error("Failed to write content to {}", absoluteFilePath, e);
             throw new RuntimeException("Failed to write content", e);
         }
     }
@@ -71,40 +63,60 @@ public class LocalEmailStorageProvider implements EmailStorageProvider {
     @Override
     public String writeBytes(Long mailboxId, String messageId, String folder, String fileName, byte[] data) {
 
-        Path dir = buildStoragePath(mailboxId, messageId).resolve(folder);
+        Path relativeDir = buildRelativePath(mailboxId, messageId).resolve(folder);
+        Path absoluteDir = resolveAbsolute(relativeDir);
 
         try {
-
-            Files.createDirectories(dir);
+            Files.createDirectories(absoluteDir);
 
             String safeFileName = Path.of(fileName).getFileName().toString();
-            Path filePath = dir.resolve(safeFileName);
+            Path absoluteFilePath = deduplicate(absoluteDir.resolve(safeFileName));
+            Files.write(absoluteFilePath, data);
 
-            if (Files.exists(filePath)) {
-                log.debug("Filename '{}' already exists, deduplicating", safeFileName);
-                String name = safeFileName;
-                String ext = "";
-                int dotIdx = safeFileName.lastIndexOf('.');
-
-                if (dotIdx > 0) {
-                    name = safeFileName.substring(0, dotIdx);
-                    ext = safeFileName.substring(dotIdx);
-                }
-
-                int counter = 1;
-                while (Files.exists(filePath)) {
-                    filePath = dir.resolve(name + "_" + counter + ext);
-                    counter++;
-                }
-            }
-
-            Files.write(filePath, data);
-            log.debug("Binary content stored locally: {} ({} bytes)", filePath.getFileName(), data.length);
-            return filePath.toAbsolutePath().toString();
+            log.debug("Binary content stored locally: {} ({} bytes)", absoluteFilePath.getFileName(), data.length);
+            return relativeDir.resolve(absoluteFilePath.getFileName()).toString();
 
         } catch (IOException e) {
-            log.error("Failed to write bytes to {}/{}", dir, fileName, e);
+            log.error("Failed to write bytes to {}/{}", absoluteDir, fileName, e);
             throw new RuntimeException("Failed to write bytes", e);
         }
+    }
+
+    private Path buildRelativePath(Long mailboxId, String messageId) {
+        return Path.of(String.valueOf(mailboxId), messageId);
+    }
+
+    private Path resolveAbsolute(Path relativePath) {
+        return Path.of(emailStorageProperties.localBasePath()).toAbsolutePath().resolve(relativePath);
+    }
+
+    private Path resolveAbsolute(String relativePath) {
+        return resolveAbsolute(Path.of(relativePath));
+    }
+
+    private Path deduplicate(Path filePath) {
+        if (!Files.exists(filePath)) {
+            return filePath;
+        }
+
+        log.debug("Filename '{}' already exists, deduplicating", filePath.getFileName());
+        String fileName = filePath.getFileName().toString();
+        String name = fileName;
+        String ext = "";
+        int dotIdx = fileName.lastIndexOf('.');
+        if (dotIdx > 0) {
+            name = fileName.substring(0, dotIdx);
+            ext = fileName.substring(dotIdx);
+        }
+
+        Path parent = filePath.getParent();
+        int counter = 1;
+        Path candidate;
+        do {
+            candidate = parent.resolve(name + "_" + counter + ext);
+            counter++;
+        } while (Files.exists(candidate));
+
+        return candidate;
     }
 }
