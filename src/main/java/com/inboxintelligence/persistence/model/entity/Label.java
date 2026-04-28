@@ -52,15 +52,10 @@ public class Label {
     @Column(name = "description")
     private String description;
 
-    // nullable — USER labels may not have one; SYSTEM labels always do
     @JdbcTypeCode(SqlTypes.VECTOR)
     @Array(length = 768)
     @Column(name = "reference_embedding")
     private float[] referenceEmbedding;
-
-    // cosine similarity confidence from LLM; null for USER labels
-    @Column(name = "confidence_score")
-    private Double confidenceScore;
 
     @Column(name = "is_active", nullable = false)
     @Builder.Default
