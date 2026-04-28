@@ -1,5 +1,6 @@
 package com.inboxintelligence.persistence.model.entity;
 
+import com.inboxintelligence.persistence.model.EmailOrigin;
 import com.inboxintelligence.persistence.model.ProcessedStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -55,6 +56,10 @@ public class EmailContent {
 
     @Column(name = "cc_address", columnDefinition = "TEXT")
     private String ccAddress;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "origin", length = 16)
+    private EmailOrigin origin;
 
     @Column(name = "raw_message_path", length = 1024)
     private String rawMessagePath;
