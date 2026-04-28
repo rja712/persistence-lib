@@ -28,6 +28,11 @@ public class GmailMailboxService {
     }
 
     @Transactional(readOnly = true)
+    public Optional<GmailMailbox> findById(Long id) {
+        return repository.findById(id);
+    }
+
+    @Transactional(readOnly = true)
     public List<GmailMailbox> findAll() {
         return repository.findAll();
     }
