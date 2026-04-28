@@ -8,4 +8,6 @@ public interface EmailStorageProvider {
 
     String writeBytes(Long mailboxId, String messageId, String folder, String fileName, byte[] data);
 
+    void deleteContent(String storagePath);
+
 }

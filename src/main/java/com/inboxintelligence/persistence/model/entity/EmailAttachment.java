@@ -38,7 +38,7 @@ public class EmailAttachment {
     @Column(name = "size_in_bytes")
     private Long sizeInBytes;
 
-    @Column(name = "storage_path", nullable = false, length = 1024)
+    @Column(name = "storage_path", length = 1024)
     private String storagePath;
 
     @Column(name = "storage_provider", nullable = false, length = 8)

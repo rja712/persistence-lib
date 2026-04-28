@@ -82,6 +82,24 @@ public class LocalEmailStorageProvider implements EmailStorageProvider {
         }
     }
 
+    @Override
+    public void deleteContent(String relativePath) {
+
+        if (relativePath == null || relativePath.isBlank()) {
+            return;
+        }
+
+        Path absolutePath = resolveAbsolute(relativePath);
+        try {
+            boolean deleted = Files.deleteIfExists(absolutePath);
+            if (deleted) {
+                log.debug("Deleted storage file: {}", absolutePath);
+            }
+        } catch (IOException e) {
+            log.warn("Failed to delete storage file: {} — {}", absolutePath, e.getMessage());
+        }
+    }
+
     private Path buildRelativePath(Long mailboxId, String messageId) {
         return Path.of(String.valueOf(mailboxId), messageId);
     }
