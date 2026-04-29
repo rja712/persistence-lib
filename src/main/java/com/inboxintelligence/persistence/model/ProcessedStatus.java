@@ -26,7 +26,4 @@ public enum ProcessedStatus {
 
     UNKNOWN_FAILURE;
 
-    public boolean isAtOrAfter(ProcessedStatus other) {
-        return this.ordinal() >= other.ordinal();
-    }
 }
