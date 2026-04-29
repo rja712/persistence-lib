@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.InvalidPathException;
 
 @Component
 @Slf4j
@@ -105,12 +106,23 @@ public class LocalEmailStorageProvider implements EmailStorageProvider {
     }
 
     private Path resolveAbsolute(Path relativePath) {
-        return Path.of(emailStorageProperties.localBasePath()).toAbsolutePath().resolve(relativePath);
+        Path base = Path.of(emailStorageProperties.localBasePath()).toAbsolutePath().normalize();
+        Path resolved = base.resolve(relativePath).normalize();
+        if (!resolved.startsWith(base)) {
+            throw new IllegalArgumentException("Path traversal attempt blocked: " + relativePath);
+        }
+        return resolved;
     }
 
     private Path resolveAbsolute(String relativePath) {
-        return resolveAbsolute(Path.of(relativePath));
+        try {
+            return resolveAbsolute(Path.of(relativePath));
+        } catch (InvalidPathException e) {
+            throw new IllegalArgumentException("Invalid storage path: " + relativePath, e);
+        }
     }
+
+    private static final int DEDUPLICATE_MAX_ATTEMPTS = 1000;
 
     private Path deduplicate(Path filePath) {
         if (!Files.exists(filePath)) {
@@ -128,13 +140,13 @@ public class LocalEmailStorageProvider implements EmailStorageProvider {
         }
 
         Path parent = filePath.getParent();
-        int counter = 1;
-        Path candidate;
-        do {
-            candidate = parent.resolve(name + "_" + counter + ext);
-            counter++;
-        } while (Files.exists(candidate));
+        for (int counter = 1; counter <= DEDUPLICATE_MAX_ATTEMPTS; counter++) {
+            Path candidate = parent.resolve(name + "_" + counter + ext);
+            if (!Files.exists(candidate)) {
+                return candidate;
+            }
+        }
 
-        return candidate;
+        throw new IllegalStateException("Could not deduplicate filename after " + DEDUPLICATE_MAX_ATTEMPTS + " attempts: " + filePath.getFileName());
     }
 }

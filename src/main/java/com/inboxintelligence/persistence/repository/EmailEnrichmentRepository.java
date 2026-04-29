@@ -1,6 +1,7 @@
 package com.inboxintelligence.persistence.repository;
 
 import com.inboxintelligence.persistence.model.ClusterAssignmentType;
+import com.inboxintelligence.persistence.model.EmailEmbeddingProjection;
 import com.inboxintelligence.persistence.model.entity.EmailEnrichment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -16,13 +17,13 @@ public interface EmailEnrichmentRepository extends JpaRepository<EmailEnrichment
     Optional<EmailEnrichment> findByEmailContentId(Long emailContentId);
 
     @Query("""
-            SELECT ee.id, ee.embedding
+            SELECT new com.inboxintelligence.persistence.model.EmailEmbeddingProjection(ee.id, ee.embedding)
             FROM EmailEnrichment ee
             JOIN EmailContent ec ON ee.emailContentId = ec.id
             WHERE ec.gmailMailboxId = :mailboxId
               AND ee.embedding IS NOT NULL
             """)
-    List<Object[]> findIdAndEmbeddingByGmailMailboxId(@Param("mailboxId") Long mailboxId);
+    List<EmailEmbeddingProjection> findIdAndEmbeddingByGmailMailboxId(@Param("mailboxId") Long mailboxId);
 
     @Modifying
     @Query("""
