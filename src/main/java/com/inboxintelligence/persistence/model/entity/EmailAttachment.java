@@ -41,7 +41,7 @@ public class EmailAttachment {
     @Column(name = "storage_path", length = 1024)
     private String storagePath;
 
-    @Column(name = "storage_provider", nullable = false, length = 8)
+    @Column(name = "storage_provider", nullable = false, length = 64)
     @Builder.Default
     private String storageProvider = "local";
 
