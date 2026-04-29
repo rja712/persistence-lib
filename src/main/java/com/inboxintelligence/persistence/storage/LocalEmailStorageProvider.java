@@ -41,13 +41,13 @@ public class LocalEmailStorageProvider implements EmailStorageProvider {
     }
 
     @Override
-    public String writeContent(Long mailboxId, String messageId, String fileName, String content) {
+    public String writeContent(String email, String messageId, String fileName, String content) {
 
         if (content == null) {
             return null;
         }
 
-        Path relativeFilePath = buildRelativePath(mailboxId, messageId).resolve(fileName);
+        Path relativeFilePath = buildRelativePath(email, messageId).resolve(fileName);
         Path absoluteFilePath = resolveAbsolute(relativeFilePath);
 
         try {
@@ -62,9 +62,9 @@ public class LocalEmailStorageProvider implements EmailStorageProvider {
     }
 
     @Override
-    public String writeBytes(Long mailboxId, String messageId, String folder, String fileName, byte[] data) {
+    public String writeBytes(String email, String messageId, String folder, String fileName, byte[] data) {
 
-        Path relativeDir = buildRelativePath(mailboxId, messageId).resolve(folder);
+        Path relativeDir = buildRelativePath(email, messageId).resolve(folder);
         Path absoluteDir = resolveAbsolute(relativeDir);
 
         try {
@@ -101,8 +101,8 @@ public class LocalEmailStorageProvider implements EmailStorageProvider {
         }
     }
 
-    private Path buildRelativePath(Long mailboxId, String messageId) {
-        return Path.of(String.valueOf(mailboxId), messageId);
+    private Path buildRelativePath(String email, String messageId) {
+        return Path.of(email, messageId);
     }
 
     private Path resolveAbsolute(Path relativePath) {
