@@ -24,5 +24,9 @@ public enum ProcessedStatus {
     CLUSTER_ASSIGNMENT_COMPLETED,
     CLUSTER_ASSIGNMENT_FAILED,
 
-    UNKNOWN_FAILURE
+    UNKNOWN_FAILURE;
+
+    public boolean isAtOrAfter(ProcessedStatus other) {
+        return this.ordinal() >= other.ordinal();
+    }
 }

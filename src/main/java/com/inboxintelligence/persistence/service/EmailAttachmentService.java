@@ -5,6 +5,7 @@ import com.inboxintelligence.persistence.repository.EmailAttachmentRepository;
 import com.inboxintelligence.persistence.storage.EmailStorageProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class EmailAttachmentService {
         return repository.findByEmailContentId(emailContentId);
     }
 
+    @Transactional
     public void deleteAllByEmailContentId(Long emailContentId, EmailStorageProvider storageProvider) {
         List<EmailAttachment> attachments = repository.findByEmailContentId(emailContentId);
         for (EmailAttachment attachment : attachments) {
